@@ -1,0 +1,137 @@
+ <app-test-shared></app-test-shared>
+
+ <div class="container-xl" *ngIf="!loading">
+  <div class="table-responsive">
+    <div class="table-wrapper">
+      <div class="table-title">
+        <div class="row">
+          <div class="col-sm-6">
+            <h2>Manage <b>Users</b></h2>
+          </div>
+          <div class="col-sm-6">
+            <button (click)="openAddModal()" class="btn btn-success" data-toggle="modal">
+              <i class="material-icons">&#xE147;</i> <span>Add New User</span></button>
+          </div>
+        </div>
+      </div>
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>
+              <span class="custom-checkbox">
+                <input type="checkbox" id="selectAll">
+                <label for="selectAll"></label>
+              </span>
+            </th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr  *ngFor="let user of users; let i = index"
+          [routerLink]="['/users', user.id]"
+          >
+            <td>
+              <span class="custom-checkbox">
+                <input type="checkbox" id="checkbox1" name="options[]" value="1">
+                <label for="checkbox1"></label>
+              </span>
+            </td>
+            <td>{{ user.name}}</td>
+            <td>{{ user.email}}</td>
+            <td>  {{ user.address.zipcode }},
+              {{ user.address.street }},
+              {{ user.address.city }}</td>
+            <td>{{ user.phone }}</td>
+            <td>
+              <button (click)="openEditModal($event, user)" class="edit" data-toggle="modal">
+                <i  class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
+              </button>
+              <button (click)="deleteUser($event, user.id)" class="delete" data-toggle="modal">
+                <i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!--Loading-->
+<div class="loading-conatainer" *ngIf="loading">
+  <div class="center">
+    <div class="wave"></div>
+    <div class="wave"></div>
+    <div class="wave"></div>
+    <div class="wave"></div>
+    <div class="wave"></div>
+    <div class="wave"></div>
+    <div class="wave"></div>
+    <div class="wave"></div>
+    <div class="wave"></div>
+    <div class="wave"></div>
+  </div>
+</div>
+
+<!--Modal-->
+<ngx-smart-modal identifier="userModal">
+  <form [formGroup]="addOrEditForm" (ngSubmit)="addOrEditUser()">
+    <div class="form-group">
+      <label for="name">name</label>
+      <input type="text" id="name" formControlName="name"  class="form-control"/>
+    </div>
+
+    <div class="form-group">
+      <label for="email">email</label>
+      <input type="email" id="email" formControlName="email"  class="form-control"/>
+    </div>
+
+    <div class="address-container" formGroupName="address">
+      <div class="form-group">
+        <label for="zipcode">zipcode</label>
+        <input
+          type="text"
+          formControlName="zipcode"
+          class="form-control"
+          id="zipcode"
+        />
+      </div>
+      <div class="form-group">
+          <label for="street">Street</label>
+          <input
+            type="text"
+            formControlName="street"
+            class="form-control"
+            id="street"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="city">city</label>
+          <input
+            type="text"
+            formControlName="city"
+            class="form-control"
+            id="city"
+          />
+        </div>
+    </div>
+
+    <div class="form-group">
+      <label for="phone">phone</label>
+      <input type="phone" id="phone" formControlName="phone"  class="form-control"/>
+    </div>
+    <button
+      type="submit"
+      class="btn btn-success"
+      [disabled]="!addOrEditForm.valid || !addOrEditForm.dirty"
+    >
+      save
+    </button>
+    <button type="button" (click)="cancel()" class="btn btn-default">cancel</button>
+  </form>
+</ngx-smart-modal>
+
